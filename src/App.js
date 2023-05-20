@@ -14,6 +14,11 @@ class App extends React.Component {
     return (
       <>
         <Router>
+          <nav>
+            <h1>Best Books</h1>
+            {/* <Link to='/'>Home</Link>
+            <Link to='./About'>About</Link> */}
+          </nav>
           <Header />
           <Routes>
             <Route 
