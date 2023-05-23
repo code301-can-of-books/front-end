@@ -39,7 +39,7 @@ class Profile extends Component {
               bulk of the card's content.
             </Card.Text>
             <div>
-              <a href="https://github.com" target="_blank" rel="noreferrer">
+              <a href="https://github.com/jonbrooks01" target="_blank" rel="noreferrer">
                 <Button>GitHub Portfolio</Button>
               </a>
             </div>
