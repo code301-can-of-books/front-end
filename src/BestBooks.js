@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Carousel from 'react-bootstrap/Carousel';
+import './BestBooks.css';
 
 class BestBooks extends React.Component {
   constructor(props) {
@@ -36,9 +37,9 @@ class BestBooks extends React.Component {
           <p>Book Carousel coming soon</p>
         ) : (
           <h3>No Books Found :(</h3>
-        )} */}
+        )}
 
-        {/* {this.state.books.length > 0 &&
+        {this.state.books.length > 0 &&
           this.state.books.map((book, idx) => (
             <div key={book._id}>
               Title: {book.title} Description: {book.description} Status:{' '}
