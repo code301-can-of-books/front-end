@@ -30,42 +30,39 @@ class BestBooks extends React.Component {
     /* TODO: render all the books in a Carousel */
     console.log(this.state.books);
     return (
-      <>
-        {/* <h2>My Essential Lifelong Learning &amp; Formation Shelf</h2>
-        <h2>{this.state.title}</h2>
-        {this.state.books.length ? (
-          <p>Book Carousel coming soon</p>
-        ) : (
-          <h3>No Books Found :(</h3>
-        )}
+      <div>
+        <h2>My Essential Lifelong Learning &amp; Formation Shelf</h2>
 
-        {this.state.books.length > 0 &&
-          this.state.books.map((book, idx) => (
-            <div key={book._id}>
-              Title: {book.title} Description: {book.description} Status:{' '}
-              {book.status}
-            </div>
-          ))} */}
-        {this.state.books.length ? (
-          <Carousel>
-            {this.state.books.map((book) => (
-              <Carousel.Item key={book._id}>
-                {/* <img
+        {this.state.books.length > 0 ? (
+          <Carousel variant='dark' >
+            {this.state.books.map((book) =>
+              <Carousel.Item>
+                <img
                   className="d-block w-100"
-                  src={book.imageUrl}
-                  alt={book.title}
-                /> */}
-                <h3>{book.title}</h3>
-                <p>{book.description}</p>
-                <p>{book.status}</p>
+                  src={`https://placehold.co/600x400?text=${book.title}`}
+                  alt=''
+                />
+                <Carousel.Caption>
+                  <h4>
+                    Status:{book.status}
+                  </h4>
+                  <p>{book.description}</p>
+                </Carousel.Caption>
               </Carousel.Item>
-            ))}
+            )}
           </Carousel>
-        ) : (
-          <h3>No Books Found :(</h3>
+        ) : (<Carousel>
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src={`https://placehold.co/600x400?text=No+Books+Found`}
+              alt='No Books Found'
+            />
+          </Carousel.Item>
+        </Carousel>
         )}
-      </>
-    );
+      </div>
+    )
   }
 }
 
