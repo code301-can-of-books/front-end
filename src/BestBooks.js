@@ -61,9 +61,8 @@ class BestBooks extends React.Component {
             <img
               className="d-block w-100"
               src={`https://placehold.co/600x400?text=No+Books+Found`}
-              alt=''
+              alt='No Books Found'
             />
-            <h3>No Books Found :</h3>
           </Carousel.Item>
         </Carousel>
         )}
