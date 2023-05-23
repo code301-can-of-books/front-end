@@ -21,7 +21,7 @@ class BestBooks extends React.Component {
     try {
       const response = await axios.get(`${process.env.REACT_APP_SERVER}/books`)
       console.log(response)
-      this.setState({ 
+      this.setState({
         books: response.data,
       }, () => console.log(this.state.data))
     } catch (err) {
@@ -34,28 +34,42 @@ class BestBooks extends React.Component {
     /* TODO: render all the books in a Carousel */
 
     return (
-      <>
+
+      <div>
         <h2>My Essential Lifelong Learning &amp; Formation Shelf</h2>
 
         {this.state.books.length > 0 ? (
-          <Carousel variant='dark'>
-            <Carousel.Item>
-              <img
-                className="d-block w-100"
-                src= 'https://placehold.co/600x400?text=this.state.title'
-                alt= ''
-              />
-              <Carousel.Caption>
-                <h2>{this.state.title}</h2>
-              </Carousel.Caption>
-            </Carousel.Item>
+          <Carousel variant='dark' >
+            {this.state.books.map((book) =>
+              <Carousel.Item>
+                <img
+                  className="d-block w-100"
+                  src={`https://placehold.co/600x400?text=${book.title}`}
+                  alt=''
+                />
+                <Carousel.Caption>
+                  <h4>
+                    Status:{book.status}
+                  </h4>
+                  <p>{book.description}</p>
+                </Carousel.Caption>
+              </Carousel.Item>
+            )}
           </Carousel>
-        ) : (
-          <h3>No Books Found :</h3>
+        ) : (<Carousel>
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src={`https://placehold.co/600x400?text=No+Books+Found`}
+              alt=''
+            />
+            <h3>No Books Found :</h3>
+          </Carousel.Item>
+        </Carousel>
         )}
+      </div>
 
 
-      </>
     )
   }
 }
