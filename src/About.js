@@ -29,9 +29,10 @@ class Profile extends Component {
               </a>
             </div>
           </Card.Body>
+
         </Card>
         <Card style={{ width: '18rem' }}>
-          <Card.Img variant="top" src="holder.js/100px180" />
+          <Card.Img variant="top" src="https://avatars.githubusercontent.com/u/122652078?s=400&u=45d1091d67ec55b5a6a07e4f4523bb636bc2752b&v=4" />
           <Card.Body>
             <Card.Title> Name</Card.Title>
             <Card.Text>
