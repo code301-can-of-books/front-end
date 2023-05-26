@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Carousel from 'react-bootstrap/Carousel';
+import Button from 'react-bootstrap/Button';
 import './BestBooks.css';
 import AddForm from './AddForm';
 
@@ -9,7 +10,12 @@ class BestBooks extends React.Component {
     super(props);
     this.state = {
       books: [],
+      showModal: false
     };
+  }
+
+  hideModal = () => {
+    this.setState({showModal: false})
   }
 
   /* TODO: Make a GET request to your API to fetch all the books from the database  */
@@ -21,7 +27,7 @@ class BestBooks extends React.Component {
     try {
       const response = await axios(`${process.env.REACT_APP_SERVER}/book`);
       console.log('API Response:', response);
-      this.setState({ books: response.data });
+      this.setState({ books: response.data,});
     } catch (error) {
       console.error(error);
     }
@@ -59,8 +65,8 @@ class BestBooks extends React.Component {
         <div>
           {this.state.books.length > 0 ? (
             <Carousel variant='dark' >
-              {this.state.books.map((book) =>
-                <Carousel.Item>
+              {this.state.books.map((book , idx) =>
+                <Carousel.Item key= {idx}>
                   <img
                     className="d-block w-100"
                     src={`https://placehold.co/600x400?text=${book.title}`}
@@ -86,8 +92,12 @@ class BestBooks extends React.Component {
           </Carousel>
           )}
         </div>
+        <Button onClick={() => this.setState({showModal: true})}>Add Your Book</Button>
         <div>
-          <AddForm postBook={this.postBook} />
+          <AddForm postBook={this.postBook} 
+            showModal={this.state.showModal}
+            hideModal={this.hideModal}/>
+
         </div>
       </div>
     )
