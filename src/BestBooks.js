@@ -4,6 +4,7 @@ import Carousel from 'react-bootstrap/Carousel';
 import Button from 'react-bootstrap/Button';
 import './BestBooks.css';
 import AddForm from './AddForm';
+import UpdateForm from './UpdateForm';
 
 class BestBooks extends React.Component {
   constructor(props) {
@@ -11,8 +12,13 @@ class BestBooks extends React.Component {
     this.state = {
       books: [],
       showModal: false,
+      updatedModal: false,
+      book: {}
     };
   }
+
+  showUpdatedModal = (book) => this.setState({updatedModal: true, book: book})
+  hideUpdatedModal = () => {this.setState({updatedModal: false})}
 
   hideModal = () => {
     this.setState({ showModal: false });
@@ -55,6 +61,13 @@ class BestBooks extends React.Component {
     this.setState({ books: updatedBook });
   };
 
+  updatedBook = async (updateBook) => {
+    const url = `${process.env.REACT_APP_SERVER}/book/${updateBook._id}`;
+    await axios.put(url, updateBook);
+    const updatedBookArr = this.state.books.map(oldBook => oldBook._id === updateBook._id ? updateBook : oldBook);
+    this.setState({books: updatedBookArr})
+  }
+
   render() {
     /* TODO: render all the books in a Carousel */
     console.log(this.state.books);
@@ -74,9 +87,10 @@ class BestBooks extends React.Component {
                   <Carousel.Caption>
                     <h4>Status:{book.status}</h4>
                     <p>{book.description}</p>
-                    <Button onClick={() => this.deleteBook(book)}>
+                    <Button variant="danger" onClick={() => this.deleteBook(book)}>
                       Delete Book
                     </Button>
+                    <Button variant="secondary" onClick={() => this.showUpdatedModal(book)}>Update Book</Button>
                   </Carousel.Caption>
                 </Carousel.Item>
               ))}
@@ -93,9 +107,10 @@ class BestBooks extends React.Component {
             </Carousel>
           )}
         </div>
-        <Button onClick={() => this.setState({ showModal: true })}>
+        <Button variant="success" onClick={() => this.setState({ showModal: true })}>
           Add Your Book
         </Button>
+
         <div>
           <AddForm
             postBook={this.postBook}
@@ -103,6 +118,13 @@ class BestBooks extends React.Component {
             hideModal={this.hideModal}
             books={this.state.books}
             deleteBook={this.deleteBook}
+          />
+
+          <UpdateForm 
+          updatedModal={this.state.updatedModal}
+          hideUpdatedModal={this.hideUpdatedModal}
+          book={this.state.book}
+          updatedBook={this.updatedBook}
           />
         </div>
       </div>
