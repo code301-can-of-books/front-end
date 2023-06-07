@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import './BestBooks.css';
 import AddForm from './AddForm';
 import UpdateForm from './UpdateForm';
+import { withAuth0 } from '@auth0/auth0-react';
 
 class BestBooks extends React.Component {
   constructor(props) {
@@ -13,12 +14,22 @@ class BestBooks extends React.Component {
       books: [],
       showModal: false,
       updatedModal: false,
-      book: {}
+      book: {},
     };
   }
 
-  showUpdatedModal = (book) => this.setState({updatedModal: true, book: book})
-  hideUpdatedModal = () => {this.setState({updatedModal: false})}
+  getToken = () => {
+    return this.props.auth0
+      .getIdTokenClaims()
+      .then((res) => res.__raw)
+      .catch((err) => console.error(err));
+  };
+
+  showUpdatedModal = (book) =>
+    this.setState({ updatedModal: true, book: book });
+  hideUpdatedModal = () => {
+    this.setState({ updatedModal: false });
+  };
 
   hideModal = () => {
     this.setState({ showModal: false });
@@ -31,7 +42,17 @@ class BestBooks extends React.Component {
 
   fetchBooks = async () => {
     try {
-      const response = await axios(`${process.env.REACT_APP_SERVER}/book`);
+      const res = await this.props.auth0.getIdTokenClaims();
+      const jwt = res.__raw;
+      console.log(jwt);
+      const config = {
+        headers: { Authorization: `Bearer ${jwt}` },
+      };
+
+      const response = await axios(
+        `${process.env.REACT_APP_SERVER}/book`,
+        config
+      );
       console.log('API Response:', response);
       this.setState({ books: response.data });
     } catch (error) {
@@ -41,8 +62,15 @@ class BestBooks extends React.Component {
 
   postBook = async (newBook) => {
     try {
+      const res = await this.props.auth0.getIdTokenClaims();
+      const jwt = res.__raw;
+
+      const config = {
+        headers: { Authorization: `Bearer ${jwt}` },
+      };
+
       const url = `${process.env.REACT_APP_SERVER}/book`;
-      const response = await axios.post(url, newBook);
+      const response = await axios.post(url, newBook, config);
       this.setState({ books: [...this.state.books, response.data] }, () =>
         console.log(this.state.books)
       );
@@ -64,9 +92,11 @@ class BestBooks extends React.Component {
   updatedBook = async (updateBook) => {
     const url = `${process.env.REACT_APP_SERVER}/book/${updateBook._id}`;
     await axios.put(url, updateBook);
-    const updatedBookArr = this.state.books.map(oldBook => oldBook._id === updateBook._id ? updateBook : oldBook);
-    this.setState({books: updatedBookArr})
-  }
+    const updatedBookArr = this.state.books.map((oldBook) =>
+      oldBook._id === updateBook._id ? updateBook : oldBook
+    );
+    this.setState({ books: updatedBookArr });
+  };
 
   render() {
     /* TODO: render all the books in a Carousel */
@@ -87,10 +117,18 @@ class BestBooks extends React.Component {
                   <Carousel.Caption>
                     <h4>Status:{book.status}</h4>
                     <p>{book.description}</p>
-                    <Button variant="danger" onClick={() => this.deleteBook(book)}>
+                    <Button
+                      variant="danger"
+                      onClick={() => this.deleteBook(book)}
+                    >
                       Delete Book
                     </Button>
-                    <Button variant="secondary" onClick={() => this.showUpdatedModal(book)}>Update Book</Button>
+                    <Button
+                      variant="secondary"
+                      onClick={() => this.showUpdatedModal(book)}
+                    >
+                      Update Book
+                    </Button>
                   </Carousel.Caption>
                 </Carousel.Item>
               ))}
@@ -107,7 +145,10 @@ class BestBooks extends React.Component {
             </Carousel>
           )}
         </div>
-        <Button variant="success" onClick={() => this.setState({ showModal: true })}>
+        <Button
+          variant="success"
+          onClick={() => this.setState({ showModal: true })}
+        >
           Add Your Book
         </Button>
 
@@ -120,11 +161,11 @@ class BestBooks extends React.Component {
             deleteBook={this.deleteBook}
           />
 
-          <UpdateForm 
-          updatedModal={this.state.updatedModal}
-          hideUpdatedModal={this.hideUpdatedModal}
-          book={this.state.book}
-          updatedBook={this.updatedBook}
+          <UpdateForm
+            updatedModal={this.state.updatedModal}
+            hideUpdatedModal={this.hideUpdatedModal}
+            book={this.state.book}
+            updatedBook={this.updatedBook}
           />
         </div>
       </div>
@@ -132,4 +173,4 @@ class BestBooks extends React.Component {
   }
 }
 
-export default BestBooks;
+export default withAuth0(BestBooks);
